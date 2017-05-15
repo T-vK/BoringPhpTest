@@ -22,7 +22,5 @@
     <script src="libs/third-party/jquery-3.js"></script>
     <script src="libs/third-party/tether-1.js"></script>
     <script src="libs/third-party/bootstrap-4/js/bootstrap.min.js"></script>
-    <script src="libs/third-party/browser-polyfill.js"></script>
-    <script src="page-action-script.js"></script>
   </body>
 </html>
