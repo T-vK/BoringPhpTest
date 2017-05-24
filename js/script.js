@@ -8,7 +8,12 @@ function ajax_post(){
 
 function loadToDos(){
     $.post("requesthandler.php", { toDoTitle: $("#toDoTitle").val(), toDoStatus: 'loadEntrys' }, function(data) {
-		$("#status").append(data);
+      var json = JSON.parse(data);
+      var i = 0;
+      for(item in json){
+        $("#status").append(JSON.stringify(json[i]) +'<br>');
+        i++;
+      }
     })
 }
 loadToDos();
