@@ -16,7 +16,6 @@
       }
     </style>
   </head>
-
   <body>
 
     <div class="card">
@@ -83,14 +82,17 @@
             let todos = JSON.parse(data)
             renderTodos(todos)
         })
-
         // Vorlage für Tamino
         // $.post("requesthandler.php", {toDoStatus: 'toggleEntryStatus', toDoID:'5' }, data => {
         //   let todos = JSON.parse(data)
         //   renderTodos(todos)
         // })
-
-
+        $("#newTodoButton").click( () => {
+            $.post("requesthandler.php", { toDoTitle: $("#newTodoText").val(), toDoStatus: 'setEntry' }, data => {
+                let todos = JSON.parse(data)
+                renderTodos(todos)
+            })
+        })
     </script>
   </body>
 </html>
