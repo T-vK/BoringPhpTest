@@ -16,7 +16,7 @@ if(!empty($_POST['toDoStatus'])){
 		$statusType = 'open';
 		$sql = "INSERT INTO toDoItems (Title, ToDoStatus) VALUES ('" . $title . "', '" . $statusType . "')";
 		if ($conn->query($sql) === TRUE) {
-			echo "New To do item";
+			//echo "New To do item";
 		} else {
 			echo "Error: " . $sql . "<br>" . $conn->error;
 		}
