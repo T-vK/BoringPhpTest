@@ -16,7 +16,6 @@
       }
     </style>
   </head>
-    
   <body>
 
     <div class="card">
@@ -31,7 +30,7 @@
                   <tr>
                     <th>#</th>
                     <th>Description</th>
-                    <th>Done</th>
+                    <th>Status</th>
                     <th></th>
                     <th></th>
                   </tr>
@@ -72,17 +71,22 @@
                         <td>${todo.entryId}</td>
                         <td>${todo.entryTitle}</td>
                         <td>${todo.entryStatus}</td>
-                        <td><button type="button" class="btn btn-sm btn-primary">Toggle Status</button></td>
+                        <td><button type="button" class="btn btn-sm btn-primary toggleStatusButton" value="${todo.entryId}">Toggle Status</button></td>
                         <td><button type="button" class="btn btn-sm btn-danger">Delete</button></td>
                     </tr>
                 `)
             })
         }
-    
+
         $.post("requesthandler.php", { toDoTitle: "", toDoStatus: 'loadEntrys' }, data => {
             let todos = JSON.parse(data)
             renderTodos(todos)
         })
+        // Vorlage für Tamino
+        // $.post("requesthandler.php", {toDoStatus: 'toggleEntryStatus', toDoID:'5' }, data => {
+        //   let todos = JSON.parse(data)
+        //   renderTodos(todos)
+        // })
         $("#newTodoButton").click( () => {
             $.post("requesthandler.php", { toDoTitle: $("#newTodoText").val(), toDoStatus: 'setEntry' }, data => {
                 let todos = JSON.parse(data)
