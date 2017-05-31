@@ -49,7 +49,7 @@
               <div class="input-group">
                 <input type="text" class="form-control" placeholder="New ToDo..." id="newTodoText">
                 <span class="input-group-btn">
-                  <button class="btn btn-success" type="button" id="newTodoButton">Add</button>
+                  <button class="btn btn-success" type="button" onclick="TodoList.add($('#newTodoText').val())">Add</button>
                 </span>
               </div>
           </li>
@@ -64,35 +64,53 @@
     <script src="libs/third-party/tether-1.js"></script>
     <script src="libs/third-party/bootstrap-4/js/bootstrap.min.js"></script>
     <script>
-        function renderTodos(todos) {
-            todos.forEach( todo => {
-                $('#todos tr:last').after(`
-                    <tr>
-                        <td>${todo.entryId}</td>
-                        <td>${todo.entryTitle}</td>
-                        <td>${todo.entryStatus}</td>
-                        <td><button type="button" class="btn btn-sm btn-primary toggleStatusButton" value="${todo.entryId}">Toggle Status</button></td>
-                        <td><button type="button" class="btn btn-sm btn-danger">Delete</button></td>
-                    </tr>
-                `)
-            })
+        'use strict'
+        
+        class TodoList {
+            static refresh() {
+                $.get('requesthandler.php', todos => {
+                    $('#todos tr:not(:first)').remove()
+                    todos.forEach( todo => {
+                        $('#todos tr:last').after(`
+                            <tr>
+                                <td>${todo.ID}</td>
+                                <td>${todo.Title}</td>
+                                <td>${todo.Status}</td>
+                                <td><button type="button" class="btn btn-sm btn-primary toggleStatusButton" onclick="TodoList.toggleStatus(${todo.ID})">Toggle Status</button></td>
+                                <td><button type="button" class="btn btn-sm btn-danger" onclick="TodoList.delete(${todo.ID})">Delete</button></td>
+                            </tr>
+                        `)
+                    })
+                })
+            }
+            static add(title) {
+                $.post('requesthandler.php', {Title:title}, data => {
+                    TodoList.refresh()
+                })
+            }
+            static toggleStatus(id) {
+                $.ajax({
+                    url: 'requesthandler.php',
+                    type: 'PUT',
+                    data: {ID:id},
+                    success: function(data) {
+                        TodoList.refresh()
+                    }
+                });
+            }
+            static delete(id) {
+                $.ajax({
+                    url: 'requesthandler.php',
+                    type: 'DELETE',
+                    data: {ID:id},
+                    success: function(data) {
+                        TodoList.refresh()
+                    }
+                });
+            }
         }
-
-        $.post("requesthandler.php", { toDoTitle: "", toDoStatus: 'loadEntrys' }, data => {
-            let todos = JSON.parse(data)
-            renderTodos(todos)
-        })
-        // Vorlage für Tamino
-        // $.post("requesthandler.php", {toDoStatus: 'toggleEntryStatus', toDoID:'5' }, data => {
-        //   let todos = JSON.parse(data)
-        //   renderTodos(todos)
-        // })
-        $("#newTodoButton").click( () => {
-            $.post("requesthandler.php", { toDoTitle: $("#newTodoText").val(), toDoStatus: 'setEntry' }, data => {
-                let todos = JSON.parse(data)
-                renderTodos(todos)
-            })
-        })
+        
+        TodoList.refresh()        
     </script>
   </body>
 </html>
